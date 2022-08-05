@@ -326,6 +326,8 @@ class instrument_trading_risk:
 
 class bar:
     'K线数据'
+    instrument_id: str
+    '合约ID'
     start: int
     '开始时间(Unix Nano)'
     end: int
@@ -864,6 +866,18 @@ class ktrader_api:
         '''
         return account_summary(self)
 
+    def subscribe_bars(self, instrument_id: str, freq: int = 1):
+        '''订阅指定合约K线, 新K线闭合时会调用策略的on_bar回调
+
+        Parameters
+        ----------
+        instrument_id : str
+            合约ID
+        freq : int
+            指定分钟线频率(freq=1, 1分钟K线; freq=5, 5分钟K线)
+        '''
+        pass
+
     def get_last_k_bars(self, instrument_id: str, window_size: int, freq: int = 1) -> List[bar]:
         '''获取指定合约K线
 
@@ -950,6 +964,19 @@ class python_strategy:
         ----------
         t: tick
             最新行情更新
+        '''
+        pass
+
+    def on_bar(self, b: bar):
+        '''K线回调
+
+        用户需调用KTrader API的subscribe_bars方法订阅合约K线行情,
+        当KTrader产生新的K线行情更新时, 会调用该方法
+
+        Parameters
+        ----------
+        b: bar
+            最新K线更新
         '''
         pass
 
