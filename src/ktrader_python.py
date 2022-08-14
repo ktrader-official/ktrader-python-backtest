@@ -531,6 +531,8 @@ class account_summary:
     '可用现金'
     risk_level: float
     '风险度 (权益-可用现金)/权益'
+    max_drawdown: float
+    '最高回撤(当前权益/最高权益 - 1.0)'
 
 class trigger_decision:
     '触发器决策'
@@ -1217,6 +1219,20 @@ def date_from_timestamp(t: int) -> int:
         时间戳对应8位数字日期(如20220202)
     '''
     return 0
+
+def kt_warn(log: str):
+    '''打印warning日志
+
+    Note
+    ----
+    日志出现在KTrader系统日志中
+
+    Parameters
+    ----------
+    log : str
+        log内容
+    '''
+    pass
 
 def kt_info(log: str):
     '''打印info日志
