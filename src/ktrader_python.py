@@ -372,8 +372,8 @@ class target_position_algorithm(Enum):
     market_on_open = 'market_on_open', '开盘抢单'
     manual = 'manual', '手动'
     force_manual = 'force_manual', '强制手动'
-    time_weighted = 'time_weighted', '时间加权'
-    volume_weighted = 'volume_weighted', '成交量加权'
+    auto_active = 'auto_active', '自动主动价格(对价单)'
+    auto_passive = 'auto_passive', '自动被动价格(挂价单)'
 
 class position_target:
     '目标仓位'
@@ -385,6 +385,10 @@ class position_target:
     '目标仓位'
     desired_price: float
     '目标价格'
+    max_order_volume: int
+    '最大下单量'
+    price_delta_threshold: int
+    '更新订单价格偏差阈值(仅对自动价格有用)'
 
 class direction_entry:
     '持仓数据'
@@ -456,6 +460,33 @@ class instrument_position(instrument_summary):
     short_position_detail: List[position_entry]
     '逐笔空仓详情'
 
+class product_summary:
+    '品种交易信息'
+    product_id: str
+    '品种ID'
+    long_margin: float
+    '多仓保证金'
+    long_frozen_margin: float
+    '多仓冻结保证金'
+    short_margin: float
+    '空仓保证金'
+    short_frozen_margin: float
+    '空仓冻结保证金'
+    total_margin: float
+    '总保证金'
+    total_frozen_margin: float
+    '总冻结保证金'
+    num_orders: int
+    '订单数'
+    num_cancel: int
+    '撤单数'
+    num_trades: int
+    '成交数'
+    order_trade_ratio: float
+    '报单成交比: '
+    action_commission_fee: float
+    '申报费'
+
 class position_summary:
     '总持仓总结'
     position_profit: float
@@ -476,6 +507,14 @@ class position_summary:
     '冻结报单手续费'
     net_pnl: float
     '净利润'
+    max_margin: float
+    '最大保证金占用'
+    num_orders: int
+    '订单数'
+    num_cancel: int
+    '撤单数'
+    num_trade_orders: int
+    '有成交订单数'
     num_trades: int
     '成交手数'
     num_win_trades: int
@@ -798,6 +837,21 @@ class ktrader_api:
         '''
         return instrument_summary()
 
+    def get_product_summary(self, product_id: str) -> product_summary:
+        '''获得指定品种交易信息, 包括保证金和报单成交比、申报费
+
+        Parameters
+        ----------
+        product_id : str
+            品种ID
+
+        Returns
+        -------
+        instrument_summary
+            该品种对应交易信息
+        '''
+        return instrument_summary()
+
     def get_position_summary(self) -> position_summary:
         '''获取本策略全部仓位总结
 
@@ -848,8 +902,13 @@ class ktrader_api:
         '''
         return []
 
-    def get_inflight_orders(self) -> List[order_status]:
+    def get_inflight_orders(self, instrument_id: str) -> List[order_status]:
         '''获取全部未完成订单
+
+        Parameters
+        ----------
+        instrument_id : str
+            按合约ID筛选, 不填为全部合约
 
         Returns
         -------
