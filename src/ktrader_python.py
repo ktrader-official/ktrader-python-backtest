@@ -676,7 +676,7 @@ class ktrader_api:
         return order_status()
 
     def set_target_position(self, target: position_target, force_override: bool = False) -> str:
-        '''获取目标仓位
+        '''设置目标仓位
 
         Parameters
         ----------
@@ -854,11 +854,6 @@ class ktrader_api:
 
     def get_position_summary(self) -> position_summary:
         '''获取本策略全部仓位总结
-
-        Parameters
-        ----------
-        instrument_id : str
-            合约ID
 
         Returns
         -------
@@ -1119,13 +1114,15 @@ def get_trading_day() -> int:
     '''
     return 0
 
-def next_trading_day(cur: int) -> int:
+def next_trading_day(cur: int, skip_holidays: bool) -> int:
     '''计算下一交易日
 
     Parameters
     ----------
     cur : int
         当前交易日
+    skip_holidays : bool
+        是否跳过节假日
 
     Returns
     -------
@@ -1134,7 +1131,7 @@ def next_trading_day(cur: int) -> int:
     '''
     return 0
 
-def next_k_trading_day(cur: int, k: int) -> int:
+def next_k_trading_day(cur: int, k: int, skip_holidays: bool) -> int:
     '''计算之后第k个交易日
 
     Parameters
@@ -1143,6 +1140,8 @@ def next_k_trading_day(cur: int, k: int) -> int:
         当前交易日
     k : int
         计算的天数
+    skip_holidays : bool
+        是否跳过节假日
 
     Returns
     -------
@@ -1166,13 +1165,15 @@ def next_day(cur: int) -> int:
     '''
     return 0
 
-def prev_trading_day(cur: int) -> int:
+def prev_trading_day(cur: int, skip_holidays: bool) -> int:
     '''计算上一交易日
 
     Parameters
     ----------
     cur : int
         当前交易日
+    skip_holidays : bool
+        是否跳过节假日
 
     Returns
     -------
@@ -1181,7 +1182,7 @@ def prev_trading_day(cur: int) -> int:
     '''
     return 0
 
-def prev_k_trading_day(cur: int, k: int) -> int:
+def prev_k_trading_day(cur: int, k: int, skip_holidays: bool) -> int:
     '''计算之前第k个交易日
 
     Parameters
@@ -1190,6 +1191,8 @@ def prev_k_trading_day(cur: int, k: int) -> int:
         当前交易日
     k : int
         计算的天数
+    skip_holidays : bool
+        是否跳过节假日
 
     Returns
     -------
